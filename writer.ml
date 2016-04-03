@@ -9,6 +9,7 @@ open Unix;;
 (* send a single packet (usually a single letter) to the machine and 
 pause execution of the program long enough for it to execute. *)
 let rec send_packet (l : gcode_packet) : unit = 
+	(* verbose packet sending response *)
 	printf "sending packet: %s" (List.hd l);
 	List.iter (printf "\t\t%s") (List.tl l);
 	flush_all ();
@@ -43,7 +44,7 @@ let raw_command () : unit =
 let talk (sts : typewriter_settings) : int = 
 	let gc = new gcode_translator sts in (* create translator with this session's settings *)
 	let rec talkloop i = 
-		printf "\ngive a sentence > ";
+		printf "\n==> ";
 		let this_str = read_line() in
 		if this_str = "quit" then i 
 		else if this_str = "raw" then let () = raw_command () in talkloop (i+1)

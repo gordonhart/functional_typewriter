@@ -2,6 +2,7 @@
 
 open Printf;;
 open Str;;
+open Char;;
 
 
 type point = float * float * float;;
@@ -58,7 +59,13 @@ class alphabet =
 
 
 	let get_letter (ltr : char) : letter =
-		try get_letter_from_file ("Alphabet/"^(ltr $^ ".obj"))
+		try (* now supports special characters (those that can't be filenames) *)
+			let spec_chars = ['.';':';'/';Char.chr 39] in (* must be defined in same order *)
+			let spec_names = ["_period";"_colon";"_slash";"_apostrophe"] in
+			if List.exists (fun x->x=ltr) spec_chars then
+				let (c,n) = List.find (fun (c,n) -> c=ltr) (List.combine spec_chars spec_names) in
+				get_letter_from_file ("Alphabet/"^n^".obj")
+			else get_letter_from_file ("Alphabet/"^(ltr $^ ".obj"))
 		with _ -> failwith "in get_letter: couldn't load this letter"
 	in
 

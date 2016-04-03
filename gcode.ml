@@ -66,7 +66,7 @@ class gcode_translator (settings : typewriter_settings) =
 			let suffix = [sprintf "G0X0Y-%fZ1\n" settings.linespace;"G28.3X0Y0\n"] in
 
 			!acc @ [suffix]
-		with _ -> failwith "in sentence_to_gcode: couldn't complete"
+		with _ -> failwith "in words_to_command_seq: couldn't complete"
 	in
 	
 
