@@ -2,3 +2,5 @@
 *.tap
 deprecated
 deprecated/*
+letters
+letters/*
