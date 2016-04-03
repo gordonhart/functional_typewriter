@@ -1,5 +1,5 @@
-#use "gcode/gcode.ml";;
-(* #use "letters/letters.ml";; *)
+#use "gcode.ml";;
+(* #use "letters.ml";; *)
 
 open Printf;;
 open Str;;

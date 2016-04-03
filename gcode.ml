@@ -1,4 +1,4 @@
-#use "letters/letters.ml";;
+#use "letters.ml";;
 (* #use "settings.ml";; *)
 
 
