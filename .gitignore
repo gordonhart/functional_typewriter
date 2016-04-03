@@ -1,0 +1,4 @@
+*.txt
+*.tap
+deprecated
+deprecated/*
