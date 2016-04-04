@@ -1,0 +1,7 @@
+*.txt
+*.tap
+deprecated
+deprecated/*
+letters
+letters/*
+*.class
