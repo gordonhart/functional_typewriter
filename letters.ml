@@ -15,6 +15,9 @@ type sentence = letter list;;
 let print_sentence (pll : sentence) : unit =
 	List.iter (fun pl -> List.iter (fun (a,b,c) -> printf "(%f, %f, %f)\n" a b c) pl) pll;; *)
 
+
+(* lowest level interface to the "database" of files describing the physical
+characteristics of each letter in each font *)
 class alphabet = 
 	(* append ^$ / prepend $^ a char to a string *)
 	(* let (^$) c s = s ^ Char.escaped c in *)

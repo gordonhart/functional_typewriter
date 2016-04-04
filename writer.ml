@@ -18,7 +18,8 @@ let rec send_packet (l : gcode_packet) : unit =
 
 	let instr = List.fold_left (fun acc x -> acc^x) "" l in
 	let sts = 
-		try Unix.system ("./sender.sh \'"^instr^"\'\n") 
+		(* try Unix.system ("./sender.sh \'"^instr^"\'\n")  *)
+		try Unix.system ("java -cp \"serial/jssc-2.8.0.jar:serial\" Sender \""^instr^"\"\n")
 		with _ -> failwith "write failed" 
 	in
 	
@@ -41,8 +42,11 @@ let raw_command () : unit =
 
 
 (* this is effectively the "main" *)
-let talk (sts : typewriter_settings) : int = 
-	let gc = new gcode_translator sts in (* create translator with this session's settings *)
+let talk ?(sets=None) () : int = 
+	let gc = match sets with (* optionally add custom settings to session *)
+		| Some s -> new gcode_translator ~settings:s ()
+		| None -> new gcode_translator ()
+	in 
 	let rec talkloop i = 
 		printf "\n==> ";
 		let this_str = read_line() in
@@ -61,12 +65,6 @@ let talk (sts : typewriter_settings) : int =
 
 
 (* main runtime loop *)
-printf "\nsaid %d things\n" (talk { (* default settings *)
-	width 		= 3.;
-	height 		= 4.;
-	kerning 	= 1.;
-	linespace 	= 6.;
-	sc_ratio	= 0.7;
-})
+printf "\nsaid %d things\n" (talk ())
 
 
