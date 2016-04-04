@@ -19,10 +19,6 @@ let print_sentence (pll : sentence) : unit =
 (* lowest level interface to the "database" of files describing the physical
 characteristics of each letter in each font *)
 class alphabet (font : string) = 
-	(* append ^$ / prepend $^ a char to a string *)
-	(* let (^$) c s = s ^ Char.escaped c in *)
-	let ($^) c s = Char.escaped c ^ s in
-
 
 	(* retrieve the entire contents of a filename rooted in the current directory *)
 	let load_file (filename : string) : string =
@@ -68,7 +64,7 @@ class alphabet (font : string) =
 			if List.exists (fun x->x=ltr) spec_chars then
 				let (c,n) = List.find (fun (c,n) -> c=ltr) (List.combine spec_chars spec_names) in
 				get_letter_from_file ("Alphabet/"^font^"/"^n^".obj")
-			else get_letter_from_file ("Alphabet/"^font^"/"^(ltr $^ ".obj"))
+			else get_letter_from_file ("Alphabet/"^font^"/"^(Char.escaped ltr)^".obj")
 		with _ -> failwith "in get_letter: couldn't load this letter"
 	in
 
