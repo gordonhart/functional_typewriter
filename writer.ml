@@ -33,12 +33,13 @@ let rec send_packet (l : gcode_packet) : unit =
 
 (* for sending commands directly to the driver board *)
 let raw_command () : unit = 
-	printf "\n enter a tinyg command: ";
+	printf "------- enter a tinyg command: ";
 	let this_str = read_line () in
 	send_packet [this_str];;
 
 
-(* this is effectively the "main" *)
+(* this is effectively the "main". accepts an optional argument for custom settings,
+otherwise will write with the defaults (stored in the gcode_translator class) *)
 let talk ?(sets=None) () : int = 
 	let gc = match sets with (* optionally add custom settings to session *)
 		| Some s -> new gcode_translator ~settings:s ()
@@ -47,11 +48,18 @@ let talk ?(sets=None) () : int =
 	let rec talkloop i = 
 		printf "\n==> ";
 		let this_str = read_line() in
-		if this_str = "quit" then i 
-		else if this_str = "raw" then let () = raw_command () in talkloop (i+1)
-		else if this_str = "home" then let () = send_packet ["G28.3X0Y0Z0\n"] in talkloop (i+1)
-		else if this_str = "kill" then let () = send_packet ["$md\n"] in talkloop (i+1)
-		else
+
+		let special_commands = [  (* mapping for each special command *)  
+			( "quit", fun i -> i );
+			( "raw" , fun i -> raw_command(); talkloop (i+1) );
+			( "home", fun i -> send_packet ["G28.3X0Y0Z0\n"]; talkloop (i+1) );
+			( "kill", fun i -> send_packet ["$md\n"]; talkloop (i+1) );
+			(* ( "~"   , fun i -> printf "cmd %d is a tilde\n" i; talkloop (i+1)) *)
+		] in
+
+		if List.exists (fun (s,c) -> s=this_str) special_commands then (* perform special cmd *)
+ 			let (c,action) = List.find (fun (sc,sa) -> sc=this_str) special_commands in action i
+ 		else
 			let () = (* try sending the translated letters to the machine one at a time *)
 				try let pktseq = gc#translate this_str in List.iter send_packet pktseq
 				with _ -> printf "Not able to write that.\n\n" 

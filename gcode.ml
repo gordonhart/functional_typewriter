@@ -48,10 +48,10 @@ class gcode_translator ?(settings={ (* default settings *)
 
 
 	let letter_to_gcode_packet (pts : letter) (xpos : float) (lowercase : bool) : gcode_packet = 
-		let mul = if lowercase then settings.sc_ratio else 1. in (* support lowercase at scratio size *)
+		let mul = if lowercase then settings.sc_ratio else 1. in (* lowercase at scratio size *)
 		let meat = List.fold_left (fun acc (x,y,z) -> 
 			let xp = ((mul*.x)*.(settings.width/.3.))+.xpos in
-			let yp = (mul*.y)*.(settings.height/.4.) in (* letters are defined in .obj as 4x3 HxW *)
+			let yp = (mul*.y)*.(settings.height/.4.) in (* letters defined in .obj as 4x3 HxW *)
 			acc @ [sprintf "G0X%fY%fZ%f\n" xp yp z]
 		) [] pts in
 		let suffix = sprintf "G0X%fY0Z1\n" ((mul*.settings.width)+.settings.kerning+.xpos) in (* go to start of next letter *)
