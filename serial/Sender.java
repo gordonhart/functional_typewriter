@@ -11,6 +11,7 @@ public class Sender {
 	public static void main(String[] args) {
 		if(args.length == 0) {
 			System.out.printf("Call with argument: java -cp \"jssc-2.8.0.jar\" Sender <cmd>");
+<<<<<<< HEAD
 		} else { // don't need to try/catch here since all of the methods used do it
 			String tg = "/dev/tty.usbserial-DA00866A";
 			boolean isconnected = connect(tg);
@@ -20,11 +21,22 @@ public class Sender {
 				sendGCode(args[0]+"\n");
 				disconnect();
 			}
+=======
+		} else {
+			// System.out.printf("argv[0] : %s\n", args[0]);
+			connect("/dev/tty.usbserial-DA00866A");
+			sendGCode(args[0]+"\n");
+			disconnect();
+>>>>>>> 2df106f688c97007d8d5a57f059f26e80650e349
 		}
 	}
 
 
+<<<<<<< HEAD
 	private static boolean connect(String port){
+=======
+	private static void connect(String port){
+>>>>>>> 2df106f688c97007d8d5a57f059f26e80650e349
 		serialPort = new SerialPort(port);
 
 		try{
@@ -38,11 +50,17 @@ public class Sender {
 			serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_XONXOFF_IN | SerialPort.FLOWCONTROL_XONXOFF_OUT);
 
 			serialPort.addEventListener(new PortListener(), SerialPort.MASK_RXCHAR);
+<<<<<<< HEAD
 			return true;
 		}
 		catch (SerialPortException ex) {
 			System.out.println("Couldn't open port: " + ex);
 			return false;
+=======
+		}
+		catch (SerialPortException ex) {
+			System.out.println("Couldn't open port: " + ex);
+>>>>>>> 2df106f688c97007d8d5a57f059f26e80650e349
 		}	
 	}
 
