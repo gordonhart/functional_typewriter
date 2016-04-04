@@ -20,6 +20,7 @@ type command_seq = gcode_packet list;;
 
 (* format for the settings that a translator is instantiated with *)
 type typewriter_settings = {
+	font		: string;
 	width 		: float;
 	height 		: float;
 	kerning 	: float;
@@ -30,6 +31,7 @@ type typewriter_settings = {
 
 (* class responsible for translating text input to gcode commands *)
 class gcode_translator ?(settings={ (* default settings *)
+	font		= "fast";
 	width 		= 3.;
 	height 		= 4.;
 	kerning 	= 1.;
@@ -59,7 +61,7 @@ class gcode_translator ?(settings={ (* default settings *)
 
 	let words_to_command_seq (str : string) : command_seq = 
 		try 
-			let ltrs = new alphabet in
+			let ltrs = new alphabet settings.font in
 			let prefix = ["G90\n";"G28.3X0Y0\n"] in (* make sure to set local coord, home *)
 	
 			let acc = ref [prefix] in (* command_seq (gcode_packet list) *)

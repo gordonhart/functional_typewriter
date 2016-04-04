@@ -63,5 +63,13 @@ let talk ?(sets=None) () : int =
 
 (* main runtime loop *)
 printf "\nsaid %d things\n" (talk ())
+(* printf "\nsaid %d things\n" (talk ~sets:(Some {
+	font		= "serif";
+	width 		= 3.;
+	height 		= 4.;
+	kerning 	= 1.;
+	linespace 	= 6.;
+	sc_ratio	= 0.7;
+}) ()) *)
 
 
