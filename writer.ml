@@ -17,7 +17,7 @@ let rec send_packet (l : gcode_packet) : unit =
 	let instr = List.fold_left (fun acc x -> acc^x) "" l in
 	let result = 
 		(* try Unix.system ("./sender.sh \'"^instr^"\'\n")  *)
-		try Unix.system ("java -cp \"serial/jssc-2.8.0.jar:serial\" Sender \""^instr^"\"\n")
+		try Unix.system ("java -cp \"serial/jssc-2.8.0.jar:serial\" Sender \""^instr^"\" &\n")
 		with _ -> failwith "write failed" 
 	in
 	
@@ -61,7 +61,9 @@ let talk ?(sets=None) () : int =
  			let (c,action) = List.find (fun (sc,sa) -> sc=this_str) special_commands in action i
  		else
 			let () = (* try sending the translated letters to the machine one at a time *)
-				try let pktseq = gc#translate this_str in List.iter send_packet pktseq
+				try let pktseq = gc#translate this_str in 
+					(* send_packet (List.fold_left (@) [] pktseq) *)
+					List.iter send_packet pktseq
 				with _ -> printf "Not able to write that.\n\n" 
 			in talkloop (i+1)
 	in talkloop 0;;
